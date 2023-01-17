@@ -12,9 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate({MeetGreet, SetTime}) {
       // define association here
       Band.hasMany(MeetGreet, {
-        foreignKey: 'band_id'
+        foreignKey: "band_id",
+        // as: 'meets',
+        // sourceKey: "id",
       });
-      Band.hasMany(SetTime);
+      Band.hasMany(SetTime, {
+        foreignKey: "bandId",
+        sourceKey: "id",
+      });
     }
   }
   Band.init({

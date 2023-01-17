@@ -11,9 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({Event, Band, Stage}) {
       // define association here
-      SetTime.belongsTo(Event);
-      SetTime.belongsTo(Band);
-      SetTime.belongsTo(Stage);
+      // SetTime.belongsTo(Event, {
+      //   foreignKey: "eventId",
+      //   targetKey: "id",
+      // });
+      SetTime.belongsTo(Band, {
+        foreignKey: "bandId",
+        targetKey: "id",
+      });
+      SetTime.belongsTo(Stage, {
+        foreignKey: "stageId",
+        targetKey: "id",
+      });
     }
   }
   SetTime.init({

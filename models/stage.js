@@ -11,10 +11,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({Event, StageEvent, SetTime}) {
       // define association here
-      Stage.belongsToMany(Event, {
-        through: StageEvent
+      Stage.hasMany(StageEvent, {
+        foreignKey: 'stageId'
       });
-      Stage.hasMany(SetTime);
+      Stage.belongsToMany(Event, {
+        through: 'StageEvent',
+        foreignKey: 'stageId',
+        otherKey: 'eventId'
+      });
+      Stage.hasMany(SetTime, {
+        foreignKey: 'stageId'
+      });
     }
   }
   Stage.init({

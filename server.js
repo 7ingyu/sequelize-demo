@@ -2,7 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const port = 3000
-const bandsController = require('./controllers/band')
+const { bandsController, eventsController } = require('./controllers')
 const bodyParser = require('body-parser')
 
 app.use(bodyParser.json())
@@ -13,6 +13,7 @@ app.get('/', (req, res) => {
 
 // CONTROLLERS
 app.use('/bands', bandsController)
+app.use('/events', eventsController)
 
 
 app.listen(port, () => {

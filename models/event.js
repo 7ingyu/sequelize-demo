@@ -15,9 +15,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'event_id'
       });
       Event.belongsToMany(Stage, {
-        through: 'StageEvent'
+        through: 'StageEvent',
+        foreignKey: 'eventId',
+        otherKey: 'stageId'
       });
-      Event.hasMany(SetTime);
+      Event.hasMany(SetTime, {
+        foreignKey: 'eventId'
+      });
     }
   }
   Event.init({
