@@ -3,7 +3,7 @@ const events = require('express').Router()
 const { Band, MeetGreet, Event, SetTime, Stage, StageEvent } = require('../models')
 const { Op } = require("sequelize")
 
-// FIND ALL EVENTS
+// FIND ALL
 events.get('/', async (req, res) => {
   try {
       let all = await Event.findAll({
@@ -30,7 +30,7 @@ events.get('/', async (req, res) => {
   }
 })
 
-// FIND A SPECIFIC EVENT
+// FIND
 events.get('/:name', async (req, res) => {
   try {
       const found = await Event.findOne({
@@ -61,12 +61,12 @@ events.get('/:name', async (req, res) => {
   }
 })
 
-// CREATE A EVENT
+// CREATE
 events.post('/', async (req, res) => {
   try {
       const created = await Event.create(req.body)
       return res.status(200).json({
-          message: 'Successfully inserted a new band',
+          message: 'Successfully inserted a new event',
           data: created
       })
   } catch(err) {
@@ -74,23 +74,24 @@ events.post('/', async (req, res) => {
   }
 })
 
-// UPDATE A BAND
-// events.put('/:id', async (req, res) => {
-//   try {
-//       const numUpdated = await Band.update(req.body, {
-//           where: {
-//               id: req.params.id
-//           }
-//       })
-//       return res.status(200).json({
-//           message: `Successfully updated ${numUpdated} band(s)`
-//       })
-//   } catch(err) {
-//     return res.status(500).json(err)
-//   }
-// })
+// UPDATE
+events.put('/:id', async (req, res) => {
+  try {
+      console.log('Updating event id', req.params.id);
+      const numUpdated = await Event.update(req.body, {
+          where: {
+              id: req.params.id
+          }
+      })
+      return res.status(200).json({
+          message: `Successfully updated ${numUpdated} band(s)`
+      })
+  } catch(err) {
+    return res.status(500).json(err)
+  }
+})
 
-// DELETE A BAND
+// DELETE
 events.delete('/:id', async (req, res) => {
   try {
       const numDeleted = await Event.destroy({
