@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({MeetGreet, Stage, StageEvent, SetTime}) {
       // define association here
+      Event.hasMany(StageEvent, {
+        foreignKey: 'eventId'
+      });
       Event.hasMany(MeetGreet, {
         foreignKey: 'event_id'
       });
