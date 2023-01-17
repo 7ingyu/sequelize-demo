@@ -3,25 +3,47 @@ const events = require('express').Router()
 const { Band, MeetGreet, Event, SetTime, Stage, StageEvent } = require('../models')
 const { Op } = require("sequelize")
 
+const findInclude = [
+  {
+    model: MeetGreet,
+    order: [['available_start_time', 'ASC']],
+    include: {
+      model: Band,
+      attributes: ['id', 'name', 'genre', 'available_start_time', 'end_time'],
+    },
+    attributes: ['id', 'meet_start_time', 'meet_end_time'],
+  },
+  {
+    model: SetTime,
+    attributes: ['id', 'startTime', 'endTime'],
+    order: [['startTime', 'ASC']],
+    include: [
+      {
+        model: Band,
+        attributes: ['id', 'name', 'genre', 'available_start_time', 'end_time'],
+      },
+      {
+        model: Stage,
+        attributes: ['id', 'name'],
+      }
+    ]
+  },
+  {
+    model: Stage,
+    attributes: ['id', 'name'],
+    through: {
+      attributes: []
+    },
+  },
+];
+
 // FIND ALL
 events.get('/', async (req, res) => {
   try {
       let all = await Event.findAll({
         order: [['start_time', 'ASC']],
-        include: [
-          {
-            model: MeetGreet,
-            include: Band
-          },
-          {
-            model: SetTime,
-            include: [Band, Stage]
-          },
-          {
-            model: Stage,
-            include: StageEvent
-          },
-        ]
+        attributes: ['id', 'name', 'date', 'start_time', 'end_time'],
+        include: findInclude
       })
       return res.status(200).json(all)
   } catch (error) {
@@ -35,23 +57,7 @@ events.get('/:name', async (req, res) => {
   try {
       const found = await Event.findOne({
         where: { name: req.params.name },
-        include: [
-          {
-            model: MeetGreet,
-            include: Band
-          },
-          {
-            model: SetTime,
-            include: [Band, Stage]
-          },
-          {
-            model: Stage,
-            include: StageEvent
-          },
-        ]
-        // order: [
-        //     [{model: MeetGreet}, {model: Event}, 'start_time', 'DESC'],
-        // ]
+        include: findInclude,
       });
       if (!found) return res.status(404).json('not found')
       return res.status(200).json(found)

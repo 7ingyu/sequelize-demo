@@ -7,10 +7,15 @@ const { Op } = require("sequelize")
 stage.get('/', async (req, res) => {
   try {
       let all = await Stage.findAll({
+        attributes: ['id', 'name'],
         include: [
           {
             model: Event,
-            include: StageEvent
+            through: {
+              attributes: []
+            },
+            attributes: ['id', 'name', 'date', 'start_time', 'end_time'],
+            order: [['date', 'ASC']],
           },
         ]
       })
@@ -26,10 +31,15 @@ stage.get('/:name', async (req, res) => {
   try {
       const found = await Stage.findOne({
         where: { name: req.params.name },
+        attributes: ['id', 'name'],
         include: [
           {
             model: Event,
-            include: StageEvent
+            through: {
+              attributes: []
+            },
+            attributes: ['id', 'name', 'date', 'start_time', 'end_time'],
+            order: [['date', 'ASC']],
           },
         ]
       });
